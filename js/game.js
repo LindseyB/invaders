@@ -30,7 +30,6 @@ function create() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    //  Our bullet group
     bullets = game.add.group();
     bullets.enableBody = true;
     bullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -39,8 +38,9 @@ function create() {
     bullets.setAll('anchor.y', 1);
     bullets.setAll('outOfBoundsKill', true);
     bullets.setAll('checkWorldBounds', true);
+    bullets.setAll('width', 5);
+    bullets.setAll('height', 20);
 
-    // The enemy's bullets
     enemyBullets = game.add.group();
     enemyBullets.enableBody = true;
     enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
@@ -49,38 +49,38 @@ function create() {
     enemyBullets.setAll('anchor.y', 1);
     enemyBullets.setAll('outOfBoundsKill', true);
     enemyBullets.setAll('checkWorldBounds', true);
+    enemyBullets.setAll('width', 5);
+    enemyBullets.setAll('height', 20);
 
-    //  The hero!
     player = game.add.sprite(400, 500, 'ship');
     player.anchor.setTo(0.5, 0.5);
+    player.width = 64;
+    player.height = 64;
     game.physics.enable(player, Phaser.Physics.ARCADE);
 
-    //  The baddies!
     aliens = game.add.group();
     aliens.enableBody = true;
     aliens.physicsBodyType = Phaser.Physics.ARCADE;
 
     createAliens();
 
-    //  The score
     scoreString = 'Score : ';
     scoreText = game.add.text(10, 10, scoreString + score, { font: '34px Arial', fill: '#fff' });
 
-    //  Lives
     lives = game.add.group();
     game.add.text(game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#fff' });
 
-    //  Text
     stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#fff' });
     stateText.anchor.setTo(0.5, 0.5);
     stateText.visible = false;
 
     for (var i = 0; i < 3; i++)
     {
-        var ship = lives.create(game.world.width - 100 + (30 * i), 60, 'ship');
+        var ship = lives.create(game.world.width - 80 + (16 * i), 60, 'ship');
         ship.anchor.setTo(0.5, 0.5);
-        ship.angle = 90;
-        ship.alpha = 0.4;
+        ship.alpha = 0.8;
+        ship.width = 16;
+        ship.height = 16;
     }
 
     //  An explosion pool
