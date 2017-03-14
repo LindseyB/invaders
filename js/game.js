@@ -3,14 +3,11 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'phaser-example', { preload: p
 
 function preload() {
 
-    game.load.image('bullet', 'assets/games/invaders/bullet.png');
-    game.load.image('enemyBullet', 'assets/games/invaders/enemy-bullet.png');
-    game.load.spritesheet('invader', 'assets/games/invaders/invader32x32x4.png', 32, 32);
-    game.load.image('ship', 'assets/games/invaders/player.png');
-    game.load.spritesheet('kaboom', 'assets/games/invaders/explode.png', 128, 128);
-    game.load.image('starfield', 'assets/games/invaders/starfield.png');
-    game.load.image('background', 'assets/games/starstruck/background2.png');
-
+    game.load.image('bullet', '../images/bullet.png');
+    game.load.image('enemyBullet', '../images/enemy-bullet.png');
+    game.load.image('ship', '../images/pixeltocat.png');
+    game.load.image('kaboom', '../images/explode.png');
+    game.load.image('alien', 'https://identicons.github.com/jasonlong.png');
 }
 
 var player;
@@ -20,7 +17,6 @@ var bulletTime = 0;
 var cursors;
 var fireButton;
 var explosions;
-var starfield;
 var score = 0;
 var scoreString = '';
 var scoreText;
@@ -33,9 +29,6 @@ var livingEnemies = [];
 function create() {
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
-
-    //  The scrolling starfield background
-    starfield = game.add.tileSprite(0, 0, 800, 600, 'starfield');
 
     //  Our bullet group
     bullets = game.add.group();
@@ -107,8 +100,10 @@ function createAliens () {
     {
         for (var x = 0; x < 10; x++)
         {
-            var alien = aliens.create(x * 48, y * 50, 'invader');
+            var alien = aliens.create(x * 48, y * 50, 'alien');
             alien.anchor.setTo(0.5, 0.5);
+            alien.width = 16;
+            alien.height = 16;
             alien.animations.add('fly', [ 0, 1, 2, 3 ], 20, true);
             alien.play('fly');
             alien.body.moves = false;
@@ -140,9 +135,6 @@ function descend() {
 }
 
 function update() {
-
-    //  Scroll the background
-    starfield.tilePosition.y += 2;
 
     if (player.alive)
     {
@@ -196,6 +188,7 @@ function collisionHandler (bullet, alien) {
     scoreText.text = scoreString + score;
 
     //  And create an explosion :)
+    //  TODO: add the animation logic here
     var explosion = explosions.getFirstExists(false);
     explosion.reset(alien.body.x, alien.body.y);
     explosion.play('kaboom', 30, false, true);
