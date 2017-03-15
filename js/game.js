@@ -2,11 +2,18 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'invaders', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
+    // images
     game.load.image('bullet', '../images/bullet.png');
     game.load.image('enemyBullet', '../images/enemy-bullet.png');
     game.load.image('ship', '../images/pixeltocat.png');
     game.load.image('kaboom', '../images/explode.png');
-    game.load.image('alien', 'https://identicons.github.com/jasonlong.png');
+    game.load.image('alien', 'https://identicons.github.com/alien.png');
+
+    // sounds
+    game.load.audio('bullet', '../sounds/bullet.wav');
+    game.load.audio('explode', '../sounds/explode.wav');
+    game.load.audio('fail', '../sounds/fail.wav');
+    game.load.audio('victory', '../sounds/victory.wav');
 }
 
 var player;
@@ -25,9 +32,20 @@ var firingTimer = 0;
 var stateText;
 var livingEnemies = [];
 
+var bullet_sound;
+var explode_sound;
+var fail_sound;
+var victory_sound;
+
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.stage.backgroundColor = "#FFF";
+
+
+    bullet_sound = game.add.audio('bullet');
+    explode_sound = game.add.audio('explode');
+    fail_sound = game.add.audio('fail');
+    victory_sound = game.add.audio('victory');
 
     bullets = game.add.group();
     bullets.enableBody = true;
@@ -148,6 +166,7 @@ function render() {
 }
 
 function collisionHandler (bullet, alien) {
+    explode_sound.play();
     bullet.kill();
     alien.kill();
 
@@ -169,14 +188,15 @@ function collisionHandler (bullet, alien) {
         enemyBullets.callAll('kill',this);
         stateText.text = " You Won, \n Click to restart";
         stateText.visible = true;
+        victory_sound.play();
 
-        //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
     }
 
 }
 
 function enemyHitsPlayer (player,bullet) {
+    explode_sound.play();
     bullet.kill();
 
     live = lives.getFirstAlive();
@@ -196,6 +216,7 @@ function enemyHitsPlayer (player,bullet) {
 
         stateText.text=" GAME OVER \n Click to restart";
         stateText.visible = true;
+        fail_sound.play();
 
         //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
@@ -217,61 +238,48 @@ function enemyFires () {
     });
 
 
-    if (enemyBullet && livingEnemies.length > 0)
-    {
+    if (enemyBullet && livingEnemies.length > 0) {
 
         var random=game.rnd.integerInRange(0,livingEnemies.length-1);
 
         // randomly select one of them
         var shooter=livingEnemies[random];
-        // And fire the bullet from this enemy
         enemyBullet.reset(shooter.body.x, shooter.body.y);
 
         game.physics.arcade.moveToObject(enemyBullet,player,120);
         firingTimer = game.time.now + 2000;
+        bullet_sound.play();
     }
 
 }
 
 function fireBullet () {
-
-    //  To avoid them being allowed to fire too fast we set a time limit
-    if (game.time.now > bulletTime)
-    {
-        //  Grab the first bullet we can from the pool
+    if (game.time.now > bulletTime) {
         bullet = bullets.getFirstExists(false);
 
-        if (bullet)
-        {
-            //  And fire it
+        if (bullet) {
             bullet.reset(player.x, player.y + 8);
             bullet.body.velocity.y = -400;
             bulletTime = game.time.now + 200;
+            bullet_sound.play();
         }
     }
 
 }
 
 function resetBullet (bullet) {
-
     //  Called if the bullet goes out of the screen
     bullet.kill();
 
 }
 
 function restart () {
-
     //  A new level starts
 
-    //resets the life count
     lives.callAll('revive');
-    //  And brings the aliens back from the dead :)
     aliens.removeAll();
     createAliens();
 
-    //revives the player
     player.revive();
-    //hides the text
     stateText.visible = false;
-
 }
