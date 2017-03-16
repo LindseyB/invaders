@@ -14,6 +14,9 @@ function preload() {
     game.load.audio('explode', '../sounds/explode.wav');
     game.load.audio('fail', '../sounds/fail.wav');
     game.load.audio('victory', '../sounds/victory.wav');
+
+    // fonts
+    game.load.image('sr_font', '../fonts/sr_font.png');
 }
 
 var player;
@@ -37,10 +40,21 @@ var explode_sound;
 var fail_sound;
 var victory_sound;
 
+var score_font;
+var lives_font;
+var state_font;
+
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
     game.stage.backgroundColor = "#FFF";
 
+    // This is dumb but I have to load this multiple times
+    score_font = game.add.retroFont('sr_font', 32, 32, Phaser.RetroFont.TEXT_SET2, 20);
+    lives_font = game.add.retroFont('sr_font', 32, 32, Phaser.RetroFont.TEXT_SET2, 20);
+    state_font = game.add.retroFont('sr_font', 32, 32, Phaser.RetroFont.TEXT_SET2, 20);
+
+    state_font.multiLine = true;
+    state_font.align = Phaser.RetroFont.ALIGN_CENTER;
 
     bullet_sound = game.add.audio('bullet');
     explode_sound = game.add.audio('explode');
@@ -83,12 +97,14 @@ function create() {
     createAliens();
 
     scoreString = 'Score : ';
-    scoreText = game.add.text(10, 10, scoreString + score, { font: '34px Arial', fill: '#000' });
+    game.add.image(10, 10, score_font);
+    score_font.text = scoreString + score;
 
     lives = game.add.group();
-    game.add.text(game.world.width - 100, 10, 'Lives : ', { font: '34px Arial', fill: '#000' });
+    game.add.image(game.world.width - 160, 10, lives_font);
+    lives_font.text = "Lives";
 
-    stateText = game.add.text(game.world.centerX,game.world.centerY,' ', { font: '84px Arial', fill: '#000' });
+    stateText = game.add.image(game.world.centerX, game.world.centerY, state_font);
     stateText.anchor.setTo(0.5, 0.5);
     stateText.visible = false;
 
@@ -171,7 +187,7 @@ function collisionHandler (bullet, alien) {
     alien.kill();
 
     score += 20;
-    scoreText.text = scoreString + score;
+    score_font.text = scoreString + score;
 
     var explosion = explosions.getFirstExists(false);
 
@@ -183,10 +199,10 @@ function collisionHandler (bullet, alien) {
 
     if (aliens.countLiving() == 0) {
         score += 1000;
-        scoreText.text = scoreString + score;
+        score_font.text = scoreString + score;
 
         enemyBullets.callAll('kill',this);
-        stateText.text = " You Won, \n Click to restart";
+        state_font.text = "You Won, \n Click to restart";
         stateText.visible = true;
         victory_sound.play();
 
@@ -214,11 +230,10 @@ function enemyHitsPlayer (player,bullet) {
         player.kill();
         enemyBullets.callAll('kill');
 
-        stateText.text=" GAME OVER \n Click to restart";
+        state_font.text ="GAME OVER \n Click to restart";
         stateText.visible = true;
         fail_sound.play();
 
-        //the "click to restart" handler
         game.input.onTap.addOnce(restart,this);
     }
 
@@ -226,14 +241,11 @@ function enemyHitsPlayer (player,bullet) {
 
 function enemyFires () {
 
-    //  Grab the first bullet we can from the pool
     enemyBullet = enemyBullets.getFirstExists(false);
 
     livingEnemies.length=0;
 
     aliens.forEachAlive(function(alien){
-
-        // put every living enemy in an array
         livingEnemies.push(alien);
     });
 
@@ -242,7 +254,6 @@ function enemyFires () {
 
         var random=game.rnd.integerInRange(0,livingEnemies.length-1);
 
-        // randomly select one of them
         var shooter=livingEnemies[random];
         enemyBullet.reset(shooter.body.x, shooter.body.y);
 
@@ -268,14 +279,10 @@ function fireBullet () {
 }
 
 function resetBullet (bullet) {
-    //  Called if the bullet goes out of the screen
     bullet.kill();
-
 }
 
 function restart () {
-    //  A new level starts
-
     lives.callAll('revive');
     aliens.removeAll();
     createAliens();
