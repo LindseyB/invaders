@@ -7,7 +7,12 @@ function preload() {
     game.load.image('enemyBullet', '../images/enemy-bullet.png');
     game.load.image('ship', '../images/pixeltocat.png');
     game.load.image('kaboom', '../images/explode.png');
-    game.load.image('alien', 'https://identicons.github.com/alien.png');
+
+    // random aliens
+    game.load.image('alien1', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
+    game.load.image('alien2', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
+    game.load.image('alien3', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
+    game.load.image('alien4', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
 
     // sounds
     game.load.audio('bullet', '../sounds/bullet.wav');
@@ -46,7 +51,7 @@ var state_font;
 
 function create() {
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.stage.backgroundColor = "#FFF";
+    game.stage.backgroundColor = "#eee";
 
     // This is dumb but I have to load this multiple times
     score_font = game.add.retroFont('sr_font', 32, 32, Phaser.RetroFont.TEXT_SET2, 20);
@@ -127,8 +132,7 @@ function create() {
 function createAliens () {
     for (var y = 0; y < 4; y++) {
         for (var x = 0; x < 10; x++) {
-            // TODO: dynamically randomly generate a new alien
-            var alien = aliens.create(x * 48, y * 50, 'alien');
+            var alien = aliens.create(x * 48, y * 50, 'alien' + (y+1));
             alien.anchor.setTo(0.5, 0.5);
             alien.width = 16;
             alien.height = 16;
