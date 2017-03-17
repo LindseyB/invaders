@@ -3,10 +3,10 @@ var game = new Phaser.Game(800, 600, Phaser.AUTO, 'invaders', { preload: preload
 
 function preload() {
     // images
-    game.load.image('bullet', '../images/bullet.png');
-    game.load.image('enemyBullet', '../images/enemy-bullet.png');
-    game.load.image('ship', '../images/pixeltocat.png');
-    game.load.image('kaboom', '../images/explode.png');
+    game.load.image('bullet', '/invaders/images/bullet.png');
+    game.load.image('enemyBullet', '/invaders/images/enemy-bullet.png');
+    game.load.image('ship', '/invaders/images/pixeltocat.png');
+    game.load.image('kaboom', '/invaders/images/explode.png');
 
     // random aliens
     game.load.image('alien1', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
@@ -15,13 +15,13 @@ function preload() {
     game.load.image('alien4', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
 
     // sounds
-    game.load.audio('bullet', '../sounds/bullet.wav');
-    game.load.audio('explode', '../sounds/explode.wav');
-    game.load.audio('fail', '../sounds/fail.wav');
-    game.load.audio('victory', '../sounds/victory.wav');
+    game.load.audio('bullet', '/invaders/sounds/bullet.wav');
+    game.load.audio('explode', '/invaders/sounds/explode.wav');
+    game.load.audio('fail', '/invaders/sounds/fail.wav');
+    game.load.audio('victory', '/invaders/sounds/victory.wav');
 
     // fonts
-    game.load.image('sr_font', '../fonts/sr_font.png');
+    game.load.image('sr_font', '/invaders/fonts/sr_font.png');
 }
 
 var player;
