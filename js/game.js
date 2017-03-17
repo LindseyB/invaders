@@ -288,6 +288,7 @@ function resetBullet (bullet) {
 
 function restart () {
     score = 0;
+    score_font.text = scoreString + score;
     lives.callAll('revive');
     aliens.removeAll();
     createAliens();
