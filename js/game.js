@@ -2,7 +2,6 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'invaders', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
-    game.load.crossOrigin = 'anonymous';
     // images
     game.load.image('bullet', '/invaders/images/bullet.png');
     game.load.image('enemyBullet', '/invaders/images/enemy-bullet.png');
@@ -10,10 +9,10 @@ function preload() {
     game.load.image('kaboom', '/invaders/images/explode.png');
 
     // random aliens
-    game.load.image('alien1', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
-    game.load.image('alien2', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
-    game.load.image('alien3', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
-    game.load.image('alien4', 'https://identicons.github.com/'+game.rnd.integerInRange(0,50)+'.png');
+    game.load.image('alien1', '/invaders/images/alien1.png');
+    game.load.image('alien2', '/invaders/images/alien2.png');
+    game.load.image('alien3', '/invaders/images/alien3.png');
+    game.load.image('alien4', '/invaders/images/alien4.png');
 
     // sounds
     game.load.audio('bullet', '/invaders/sounds/bullet.wav');
