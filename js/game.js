@@ -2,6 +2,7 @@
 var game = new Phaser.Game(800, 600, Phaser.AUTO, 'invaders', { preload: preload, create: create, update: update, render: render });
 
 function preload() {
+    game.load.crossOrigin = 'anonymous';
     // images
     game.load.image('bullet', '/invaders/images/bullet.png');
     game.load.image('enemyBullet', '/invaders/images/enemy-bullet.png');
